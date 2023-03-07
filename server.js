@@ -1,9 +1,9 @@
 const express = require("express");
 const app = express();
 const port = process.env.port || 3000;
-const userRoute = require("./routes/user");
+const userRoute = require("./routes/routes");
 
-app.use("/api/user", userRoute);
+app.use("/user", userRoute);
 
 app.get("/", function(req, res) {
   res.send("gfdddd");
