@@ -3,7 +3,7 @@ const app = express();
 const port = process.env.port || 3000;
 const userRoute = require("./routes/routes");
 
-app.use("/user", userRoute);
+app.use("/", userRoute);
 
 app.get("/", function(req, res) {
   res.send("gfdddd");
