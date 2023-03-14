@@ -4,9 +4,10 @@ const port = process.env.port || 3000;
 const userRoute = require("./routes/routes");
 
 app.use("/", userRoute);
-
-app.get("/", function(req, res) {
-  res.send("gfdddd");
+app.set("view engine", "hbs")
+app.use(express.static('public'))
+app.get("", function(req, res) {
+  res.render("index");
 });
 
 app.listen(port, function() {
