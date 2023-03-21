@@ -1,0 +1,23 @@
+const express = require("express");
+const router = express.Router();
+const path = require('path');
+const user = require("../controller/user");
+const books = require("../controller/books");
+const buy = require("../controller/buy");
+const admin = require("../controller/admin");
+const addbooksadmin = require("../controller/addbooksadmin");
+const showbooksusr = require("../controller/showbooksusr");
+const deletebooks = require("../controller/deletebooks");
+const authenticate = require("../controller/authenticate");
+// const addBook = require("../controller/user" );
+// router.route("/").get(addBook);
+
+router.get("/user", user.func);
+router.get("/books", books.func);
+router.get("/buy", buy.func);
+router.get("/admin", admin.func);
+router.get("/addbooksadmin", addbooksadmin.func);
+router.get("/showbookusr", showbooksusr.func);
+router.get("/deletebooks", deletebooks.func);
+router.get("/authenticate", authenticate.func);
+module.exports = router;
