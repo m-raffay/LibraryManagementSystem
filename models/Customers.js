@@ -2,7 +2,7 @@ const DataTypes = require("sequelize");
 const Sequelize = require("sequelize");
 const sequelize= require('../database/dbconnection');
 const reviews = require("../models/Reviews");
-// Define Customers table
+
 const Customers = sequelize.define('customers', {
   id: {
     type: Sequelize.INTEGER,
@@ -24,11 +24,12 @@ const Customers = sequelize.define('customers', {
 
 sequelize.sync().then(() => {
   console.log('Customer table created successfully!');
+  Customers.hasMany(reviews);
+reviews.belongsTo(Customers);
 }).catch((error) => {
   console.error('Unable to create table : ', error);
 });
 
-// Customers.hasMany(reviews);
-// reviews.belongsTo(Customers);
+
 
 sequelize.sync();
