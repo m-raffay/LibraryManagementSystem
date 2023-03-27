@@ -4,13 +4,20 @@ const path = require('path');
 const user = require("../controller/user");
 const books = require("../controller/books");
 const buy = require("../controller/buy");
-const admin = require("../controller/admin");
 const addbooksadmin = require("../controller/addbooksadmin");
 const showbooksusr = require("../controller/showbooksusr");
 const deletebooks = require("../controller/deletebooks");
 const authenticate = require("../controller/authenticate");
-// const addBook = require("../controller/user" );
+const customer = require("../controller/customers");
+const review = require("../controller/reviews" );
+const admin = require("../controller/admin");
+const order = require("../controller/order");
+const orderitem = require("../controller/orderitems");
+// const OrderItems = require("../models/orderitem");
 // router.route("/").get(addBook);
+
+const auth = require("../controller/auth");
+const authenticateToken = require("../middleware/authenticateToken");
 
 router.get("/bookbyid/:id", books.getBookById);
 router.delete("/deletebookbyid/:id", books.deleteBookById);
