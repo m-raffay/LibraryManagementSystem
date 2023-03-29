@@ -24,8 +24,9 @@ const Customers = sequelize.define('customers', {
 
 sequelize.sync().then(() => {
   console.log('Customer table created successfully!');
-  Customers.hasMany(reviews);
-reviews.belongsTo(Customers);
+
+//   Customers.hasMany(reviews);
+// reviews.belongsTo(Customers);
 }).catch((error) => {
   console.error('Unable to create table : ', error);
 });
