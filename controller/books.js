@@ -1,15 +1,29 @@
 const Books = require('../models/Books');
 
 const booksController = {
+// async getAllBooks(req, res) {
+// try {
+//     const books = await Books.findAll();
+//     res.json(books);
+// } catch (error) {
+//     console.log(error);
+//     res.status(500).send('Error retrieving books');
+// }
+// },
 async getAllBooks(req, res) {
-try {
-    const books = await Books.findAll();
-    res.json(books);
-} catch (error) {
+    try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const offset = (page - 1) * limit;
+    const {count: totalItems, rows: books} = await Books.findAndCountAll({ limit: parseInt(limit), offset });
+    const totalPages = Math.ceil(totalItems / limit);
+    res.json({ totalPages, currentPage: page, totalItems, books });
+    } catch (error) {
     console.log(error);
     res.status(500).send('Error retrieving books');
-}
-},
+    }
+    },
+
 
 async getBookById(req, res) {
 const { id } = req.params;

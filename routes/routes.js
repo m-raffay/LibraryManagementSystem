@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+//const app = express();
 const path = require('path');
 const user = require("../controller/user");
 const books = require("../controller/books");
@@ -13,6 +14,8 @@ const review = require("../controller/reviews" );
 const admin = require("../controller/admin");
 const order = require("../controller/order");
 const orderitem = require("../controller/orderitems");
+const notfound = require("../controller/notfound");
+
 // const OrderItems = require("../models/orderitem");
 // router.route("/").get(addBook);
 
@@ -60,6 +63,10 @@ router.post('/register', auth.register);
 router.post('/login', auth.login);
 router.get('/profile', authenticateToken, (req, res) => {
   res.json(req.user);
+});
+
+router.get("/*", (req, res) => {
+  res.status(200).json({msg: "Not Found !"});
 });
 
 
