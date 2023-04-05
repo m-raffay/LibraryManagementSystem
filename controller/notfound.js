@@ -1,6 +1,4 @@
-
   const func = async(req, res) => {
-    res.status(200).json({msg: "Not Found !"});
+    res.sendFile(__dirname + '/error.html');
 }
-
-module.exports = func;
+module.exports = {func};

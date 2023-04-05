@@ -1,7 +1,8 @@
 const express = require("express");
 const router = express.Router();
-//const app = express();
-const path = require('path');
+const app = express();
+// const path = require('path');
+// app.use(express.static(path.join(__dirname, 'public')));
 const user = require("../controller/user");
 const books = require("../controller/books");
 const buy = require("../controller/buy");
@@ -65,11 +66,8 @@ router.get('/profile', authenticateToken, (req, res) => {
   res.json(req.user);
 });
 
-router.get("/*", (req, res) => {
-  res.status(200).json({msg: "Not Found !"});
-});
-
-
+// All other routes should redirect to the index.html
+router.get('/*', notfound.func);
 // router.get("/user", user.func);
 // router.get("/buy", buy.func);
 // router.get("/admin", admin.func);

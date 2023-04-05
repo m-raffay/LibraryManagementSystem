@@ -6,7 +6,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 const port = process.env.port || 3000;
 // const userRoute = require("./routes/routes");
-
+const path = require('path');
+app.use(express.static('controller')); 
+app.use('/img', express.static('img'));
 const route = require('./routes/routes');
 app.use('/', route);
 // app.use('/', (req,res) => {
