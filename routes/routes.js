@@ -1,78 +1,76 @@
 const express = require("express");
 const router = express.Router();
-const app = express();
-// const path = require('path');
-// app.use(express.static(path.join(__dirname, 'public')));
-const user = require("../controller/user");
+
 const books = require("../controller/books");
-const buy = require("../controller/buy");
-const addbooksadmin = require("../controller/addbooksadmin");
-const showbooksusr = require("../controller/showbooksusr");
-const deletebooks = require("../controller/deletebooks");
-const authenticate = require("../controller/authenticate");
-const customer = require("../controller/customers");
-const review = require("../controller/reviews" );
-const admin = require("../controller/admin");
-const order = require("../controller/order");
-const orderitem = require("../controller/orderitems");
-const notfound = require("../controller/notfound");
-
-// const OrderItems = require("../models/orderitem");
-// router.route("/").get(addBook);
-
+const customers = require("../controller/customers");
+const reviews = require("../controller/reviews");
+const admins = require("../controller/admin");
+const orders = require("../controller/order");
+const orderItems = require("../controller/orderitems");
 const auth = require("../controller/auth");
+const user=require("../controller/user");
 const authenticateToken = require("../middleware/authenticateToken");
 
-router.get("/bookbyid/:id", books.getBookById);
-router.delete("/deletebookbyid/:id", books.deleteBookById);
+// User routes
+router.get("/allusers", user.getAllUsers);
+router.get("/userbyid/:id", user.getUserById);
+router.post("/createuser", user.createUser);
+router.put("/updateuserbyid/:id", user.updateUserById);
+router.delete("/deleteuserbyid/:id", user.deleteUserById);
+// Book routes
 router.get("/allbooks", books.getAllBooks);
+router.get("/bookbyid/:id", books.getBookById);
 router.post("/createbook", books.createBook);
 router.put("/updatebookbyid/:id", books.updateBookById);
+router.delete("/deletebookbyid/:id", books.deleteBookById);
 
-router.get("/customerbyid/:id", customer.getCustomerById);
-router.delete("/deletecustomerbyid/:id", customer.deleteCustomerbyid);
-router.get("/allcustomers", customer.getAllCustomers);
-router.post("/createcustomer", customer.createCustomer);
-router.put("/updatecustomerbyid/:id", customer.updateCustomerbyid);
+// Customer routes
+router.get("/allcustomers", customers.getAllCustomers);
+router.get("/customerbyid/:id", customers.getCustomerById);
+router.post("/createcustomer", customers.createCustomer);
+router.put("/updatecustomerbyid/:id", customers.updateCustomerbyid);
+router.delete("/deletecustomerbyid/:id", customers.deleteCustomerbyid);
 
-router.get("/reviewbyid/:id", review.getReviewById);
-router.delete("/deletereviewbyid/:id", review.deleteReviewById);
-router.get("/allreview", review.getAllReviews);
-router.post("/createreview", review.createReview);
-router.put("/updatereviewbyid/:id", review.updateReviewById);
+// Review routes
+router.get("/allreviews", reviews.getAllReviews);
+router.get("/reviewbyid/:id", reviews.getReviewById);
+router.post("/createreviews", reviews.createReview);
+router.put("/updatereviewbyid/:id", reviews.updateReviewById);
+router.delete("/deletereviewbyid/:id", reviews.deleteReviewById);
 
+// Admin routes
+router.get("/alladmins", admins.getAllAdmins);
+router.get("/adminbyid/:id", admins.getAdminById);
+router.post("/createadmin", admins.createAdmin);
+router.put("/updateadminbyid/:id", admins.updateAdminById);
+router.delete("/deleteadminbyid/:id", admins.deleteAdminById);
 
-router.get("/adminbyid/:id",admin.getAdminById);
-router.delete("/deletereadminbyid/:id",admin.deleteAdminById);
-router.get("/allreview", admin.getAllAdmins);
-router.post("/createadmin", admin.createAdmin);
-router.put("/updateadminbyid/:id", admin.updateAdminById);
+// Order routes
+router.get("/allorders", orders.getAllOrders);
+router.get("/ordersbyid/:id", orders.getOrderById);
+router.post("/createorder", orders.createOrder);
+router.put("/updateorderbyid/:id", orders.updateOrderById);
+router.delete("/deleteorderbyid/:id", orders.deleteOrderById);
 
-router.get("/orderbyid/:id",order.getOrderById);
-router.delete("/deletereorderbyid/:id",order.deleteOrderById);
-router.get("/allorder", order.getAllOrders);
-router.post("/createorder", order.createOrder);
-router.put("/updateorderbyid/:id", order.updateOrderById);
+// Order item routes
+router.get("/allorderitems", orderItems.getOrderItems);
+router.get("/orderitemsbyid/:id", orderItems.getOrderItemById);
+router.post("/createorderitem", orderItems.createOrderItem);
+router.put("/updateorderitembyid/:id", orderItems.updateOrderItemById);
+router.delete("/deleteorderitembyid/:id", orderItems.deleteOrderItemById);
 
-router.get("/orderitemsbyid/:id",orderitem.getOrderItemById);
-router.delete("/deletereorderitemsbyid/:id",orderitem.deleteOrderItemById);
-router.post("/createorderitems", orderitem.createOrderItem);
-router.put("/updateorderitemsbyid/:id", orderitem.updateOrderItemById);
+// Authentication routes
+router.post("/register", auth.register);
+router.post("/login", auth.login);
 
-
-router.post('/register', auth.register);
-router.post('/login', auth.login);
-router.get('/profile', authenticateToken, (req, res) => {
-  res.json(req.user);
+// Admin routes that require authentication
+router.post("/admin/add-book", authenticateToken.authenticateToken, function(req, res) {
+  books.createBook(req, res);
 });
 
-// All other routes should redirect to the index.html
-router.get('/*', notfound.func);
-// router.get("/user", user.func);
-// router.get("/buy", buy.func);
-// router.get("/admin", admin.func);
-// router.get("/addbooksadmin", addbooksadmin.func);
-// router.get("/showbookusr", showbooksusr.func);
-// router.get("/deletebooks", deletebooks.func);
-// router.get("/authenticate", authenticate.func);
+// Catch-all route
+router.get("*", (req, res) => {
+  res.status(404).send("Not Found");
+});
+
 module.exports = router;

@@ -5,5 +5,5 @@ const authorizeAdmin = (req, res, next) => {
     next();
   };
   
-  module.exports = authorizeAdmin;
+  module.exports = {authorizeAdmin};
   

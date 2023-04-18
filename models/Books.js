@@ -1,6 +1,8 @@
 const DataTypes = require("sequelize");
 const Sequelize = require("sequelize");
 const sequelize= require('../database/dbconnection');
+const Reviews = require("./Reviews");
+const Orderitems=require('./Orderitem');
 // Define Books table
 const Books = sequelize.define('books', {
     id: {
@@ -37,7 +39,13 @@ const Books = sequelize.define('books', {
       defaultValue: 0,
     },
   });
-  
+  // One-to-Many relationship between Books and Reviews
+Books.hasMany(Reviews, { foreignKey: 'bookId' });
+Reviews.belongsTo(Books, { foreignKey: 'bookId' });
+// One-to-Many relationship between Books and Orderitems
+Books.hasMany(Orderitems, { foreignKey: 'bookId' });
+Orderitems.belongsTo(Books, { foreignKey: 'bookId' });
+sequelize.sync();
   module.exports=Books;
-  sequelize.sync();
+
   

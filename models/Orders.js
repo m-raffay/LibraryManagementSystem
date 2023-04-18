@@ -1,7 +1,7 @@
 const DataTypes = require("sequelize");
 const Sequelize = require("sequelize");
 const sequelize= require('../database/dbconnection');  
-  
+const Orderitems=require('./Orderitem')
   // Define Orders table
   const Orders = sequelize.define('orders', {
     id: {
@@ -17,6 +17,8 @@ const sequelize= require('../database/dbconnection');
     },
     status: Sequelize.STRING,
   });
-
+// One-to-Many relationship between Order and Orderitems
+Orders.hasMany(Orderitems, { foreignKey: 'orderId' });
+Orderitems.belongsTo(Orders, { foreignKey: 'orderId' });
+sequelize.sync();
   module.exports=Orders;
-  sequelize.sync();

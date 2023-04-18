@@ -8,6 +8,15 @@ const User = sequelize.define('User', {
     autoIncrement: true,
     primaryKey: true
   },
+  name: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  email: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    unique: true,
+  },
   username: {
     type: DataTypes.STRING,
     unique: true,
@@ -24,7 +33,7 @@ const User = sequelize.define('User', {
 }, {
   hooks: {
     beforeCreate: async (user) => {
-      const hashedPassword = await bcrypt.hash(user.password, 10);
+      const hashedPassword = await bcrypt.hash(user.password, 5);
       user.password = hashedPassword;
     }
   }

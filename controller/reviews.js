@@ -1,4 +1,7 @@
+const DataTypes = require("sequelize");
+const Sequelize = require("sequelize");
 const Reviews = require('../models/Reviews');
+const sequelize= require('../database/dbconnection');
 
 const createReview = async (req, res) => {
 const { reviewText, rating } = req.body;
@@ -15,16 +18,33 @@ try {
 };
 
 const getAllReviews = async (req, res) => {
-try {
-    const reviews = await Reviews.findAll();
-    console.log(`Retrieved ${reviews.length} reviews.`);
-    res.json(reviews);
-} catch (error) {
-    console.error('Error retrieving reviews: ', error);
-    res.status(500).json({ error: 'Unable to retrieve reviews' });
-}
-};
-
+    const page = req.query.page ? parseInt(req.query.page) : 1;
+    const pageSize = req.query.pageSize ? parseInt(req.query.pageSize) : 10;
+    const sortBy = req.query.sortBy ? req.query.sortBy : "id";
+    const sortOrder = req.query.sortOrder ? req.query.sortOrder : "asc";
+    const rating = req.query.rating ? parseInt(req.query.rating) : null;
+  
+    try {
+      const offset = (page - 1) * pageSize;
+      const whereClause = rating ? { rating: rating } : {};
+      const reviews = await Reviews.findAndCountAll({
+        where: whereClause,
+        order: [[sortBy, sortOrder]],
+        limit: pageSize,
+        offset: offset,
+      });
+  
+      console.log(`Retrieved ${reviews.rows.length} reviews.`);
+      res.json({
+        reviews: reviews.rows,
+        totalCount: reviews.count,
+        currentPage: page,
+        pageSize: pageSize,
+      });
+    } catch (error) {
+      console.error('Error retrieving reviews: ', error);
+      res.status(500).json({ error: 'Unable to retrieve reviews' });
+    }};
 const getReviewById = async (req, res) => {
 const id = req.params.id;
 

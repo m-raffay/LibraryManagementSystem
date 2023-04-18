@@ -14,14 +14,16 @@ const generateAccessToken = (id, username, role) => {
   const secretKey = 'secret_key';
   return jwt.sign(payload, secretKey, options);
 };
-
 const register = async (req, res) => {
   try {
-    const { username, password, role } = req.body;
+    const { name,email,username, password, role } = req.body;
+
+    const hashedPassword = await bcrypt.hash(password, 05);
 
     const user = await User.create({
+      name,email,
       username,
-      password,
+      password: hashedPassword,
       role
     });
 
@@ -33,10 +35,9 @@ const register = async (req, res) => {
     res.status(500).json({ message: 'Server Error' });
   }
 };
-
 const login = async (req, res) => {
   try {
-    const { username, password } = req.body;
+    const {username, password } = req.body;
 
     const user = await User.findOne({
       where: {
@@ -44,15 +45,15 @@ const login = async (req, res) => {
       }
     });
 
-    // if (user) {
-    //     return res.json({username});
-    //   }
+    console.log('user:', user);
 
-    if (!user) {
-      return res.status(400).json({ message: 'Invalid Credentials' });
-    }
-
+    // if (!user) {
+    //   return res.status(400).json({ message: 'Invalid Credentials' });
+    // }
+   
     const passwordMatch = await bcrypt.compare(password, user.password);
+
+    console.log('passwordMatch:', passwordMatch);
 
     if (!passwordMatch) {
       return res.status(400).json({ message: 'Invalid Credentials' });
@@ -66,6 +67,8 @@ const login = async (req, res) => {
     res.status(500).json({ message: 'Server Error' });
   }
 };
+
+
 
 module.exports = {
   register,

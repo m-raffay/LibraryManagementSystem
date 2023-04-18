@@ -1,5 +1,5 @@
-const { Customers } = require('../models/Customers');
-
+const Customers  = require('../models/Customers');
+const { Op } = require('sequelize');
 const createCustomer = async (req, res) => {
   const { name, email, shippingAddress, billingInfo } = req.body;
   
@@ -18,15 +18,36 @@ const createCustomer = async (req, res) => {
 };
 
 const getAllCustomers = async (req, res) => {
+  const page = req.query.page ? parseInt(req.query.page) : 1;
+  const pageSize = req.query.pageSize ? parseInt(req.query.pageSize) : 10;
+  const sortBy = req.query.sortBy ? req.query.sortBy : "id";
+  const sortOrder = req.query.sortOrder ? req.query.sortOrder : "asc";
+  const name = req.query.name ? req.query.name : "";
+
   try {
-    const customers = await Customers.findAll();
-    console.log(`Retrieved ${customers.length} customers.`);
-    res.json(customers);
+    const offset = (page - 1) * pageSize;
+    const customers = await Customers.findAndCountAll({
+    where: {
+  name: { [Op.like]: `%${name}%` },
+},
+      order: [[sortBy, sortOrder]],
+      limit: pageSize,
+      offset: offset,
+    });
+
+    console.log(`Retrieved ${customers.rows.length} customers.`);
+    res.json({
+      customers: customers.rows,
+      totalCount: customers.count,
+      currentPage: page,
+      pageSize: pageSize,
+    });
   } catch (error) {
     console.error('Error retrieving customers: ', error);
     res.status(500).json({ error: 'Unable to retrieve customers' });
   }
 };
+
 
 
 const getCustomerById = async (req, res) => {

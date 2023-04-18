@@ -19,5 +19,5 @@ const OrderItems = sequelize.define('orderItems', {
     allowNull: false,
     },
     });
-    module.exports=OrderItems;
     sequelize.sync();
+    module.exports=OrderItems;

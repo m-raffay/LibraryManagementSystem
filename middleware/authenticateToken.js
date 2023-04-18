@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const secretKey = 'secret_key'
-
+const m = require('..//middleware/authorizeAdmin');
 const authenticateToken = (req, res, next) => {
   const authHeader = req.headers.authorization;
   const token = authHeader && authHeader.split(' ')[1];
@@ -19,4 +19,10 @@ const authenticateToken = (req, res, next) => {
   });
 };
 
-module.exports = authenticateToken;
+const requireUserAuth = (req, res, next) => {
+  if (m.authorizeAdmin(req, res).status == 403) {
+    return res.status(401).json({ message: 'Unauthorized' });
+  }
+  next();
+};
+module.exports = { authenticateToken, requireUserAuth };

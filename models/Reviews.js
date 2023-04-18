@@ -21,7 +21,6 @@ const sequelize= require('../database/dbconnection');
       },
     },
   });
-
+  sequelize.sync();
   module.exports=Reviews;
   
-  sequelize.sync();
